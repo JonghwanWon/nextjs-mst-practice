@@ -1,9 +1,11 @@
+import { Provider } from 'mobx-react';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'querystring';
 import { ThemeProvider } from 'styled-components';
 
+import { useStore } from '~/stores/init';
 import theme, { GlobalStyle } from '~/theme';
 
 // persistent layout
@@ -21,9 +23,9 @@ type MyAppProps = AppProps & {
 
 const MyApp = ({ Component, pageProps }: MyAppProps) => {
   const router = useRouter();
-
   // persistent layout
   const withLayout = Component.layout ?? DefaultLayout;
+  const store = useStore(pageProps.initialData);
 
   return (
     <>
@@ -39,7 +41,9 @@ const MyApp = ({ Component, pageProps }: MyAppProps) => {
       </Head>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
-        {withLayout(<Component {...pageProps} />, router.query)}
+        <Provider store={store}>
+          {withLayout(<Component {...pageProps} />, router.query)}
+        </Provider>
       </ThemeProvider>
     </>
   );

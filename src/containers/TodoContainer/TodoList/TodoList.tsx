@@ -1,9 +1,8 @@
-import { observer } from 'mobx-react';
 import { FC } from 'react';
 import { MdCheckCircle } from 'react-icons/md';
 import styled from 'styled-components';
 
-import { TTodoStore } from '~/stores/TodoStore';
+import { InjectedStoreProps, pluggedIn } from '~/helpers/mobx';
 import colors from '~/theme/colors';
 
 const Container = styled.div`
@@ -70,21 +69,23 @@ const Task = styled.p`
   font-size: 21px;
 `;
 
-type TodoListProps = { store: TTodoStore };
+type TodoListProps = {} & InjectedStoreProps;
 
 const TodoList: FC<TodoListProps> = ({ store }) => {
+  const { todoStore } = store;
+
   return (
     <Container>
       <TodoItems>
-        {store.filteredTodos.map((todo) => (
+        {todoStore.filteredTodos.map((todo) => (
           <TodoItem key={todo.id}>
-            <Status onClick={() => store.toggleDone(todo.id)}>
+            <Status onClick={() => todoStore.toggleDone(todo.id)}>
               <DoneIcon isCompleted={todo.done}>
                 <MdCheckCircle size={24} />
               </DoneIcon>
             </Status>
             <Task>{todo.task}</Task>
-            <ClearButton onClick={() => store.removeTodo(todo.id)} />
+            <ClearButton onClick={() => todoStore.removeTodo(todo.id)} />
           </TodoItem>
         ))}
       </TodoItems>
@@ -92,4 +93,4 @@ const TodoList: FC<TodoListProps> = ({ store }) => {
   );
 };
 
-export default observer(TodoList);
+export default pluggedIn(TodoList);

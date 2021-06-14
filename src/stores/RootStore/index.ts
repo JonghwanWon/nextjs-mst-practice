@@ -3,7 +3,7 @@ import { Instance, types as T } from 'mobx-state-tree';
 import SampleStore from '../TodoStore';
 
 const rootStore = T.model({
-  sample: T.optional(SampleStore, {}),
+  todoStore: T.optional(SampleStore, {}),
 })
   .views((self) => ({}))
   .actions((self) => ({}));

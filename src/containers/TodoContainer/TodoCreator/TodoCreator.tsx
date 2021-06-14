@@ -2,7 +2,7 @@ import { FormEventHandler, useRef, useState } from 'react';
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { TTodoStore } from '~/stores/TodoStore';
+import { InjectedStoreProps, pluggedIn } from '~/helpers/mobx';
 import colors from '~/theme/colors';
 
 const Container = styled.div``;
@@ -31,18 +31,17 @@ const Button = styled.button`
   outline: none;
 `;
 
-type TodoCreatorProps = {
-  store: TTodoStore;
-};
+type TodoCreatorProps = {} & InjectedStoreProps;
 
 const TodoCreator: FC<TodoCreatorProps> = ({ store }) => {
+  const { todoStore } = store;
   const [inputValue, setInputValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
-    store.addTodo({ task: inputValue });
+    todoStore.addTodo({ task: inputValue });
     setInputValue('');
   };
 
@@ -64,4 +63,4 @@ const TodoCreator: FC<TodoCreatorProps> = ({ store }) => {
   );
 };
 
-export default TodoCreator;
+export default pluggedIn(TodoCreator);

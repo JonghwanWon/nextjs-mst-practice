@@ -22,20 +22,22 @@ const TodoStore = T.model('TodoStore', {
     TODO_FILTER.SHOW_ALL,
   ),
 })
-  .views((self) => ({
-    get todosData() {
-      return Array.from(self.todos.values());
-    },
-    get activeCount() {
-      return this.todosData.filter(todoFilters.show_active).length;
-    },
-    get completedCount() {
-      return this.todosData.filter(todoFilters.show_completed).length;
-    },
-    get filteredTodos() {
-      return this.todosData.filter(todoFilters[self.filter]);
-    },
-  }))
+  .views((self) => {
+    return {
+      get todosData() {
+        return Array.from(self.todos.values());
+      },
+      get activeCount() {
+        return this.todosData.filter(todoFilters.show_active).length;
+      },
+      get completedCount() {
+        return this.todosData.filter(todoFilters.show_completed).length;
+      },
+      get filteredTodos() {
+        return this.todosData.filter(todoFilters[self.filter]);
+      },
+    };
+  })
   .actions((self) => ({
     setFilter(filter: TODO_FILTER) {
       self.filter = filter;

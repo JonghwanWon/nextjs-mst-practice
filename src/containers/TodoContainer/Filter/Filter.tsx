@@ -1,8 +1,7 @@
-import { observer } from 'mobx-react';
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { TTodoStore } from '~/stores/TodoStore';
+import { InjectedStoreProps, pluggedIn } from '~/helpers/mobx';
 import { TODO_FILTER } from '~/stores/TodoStore';
 import colors from '~/theme/colors';
 
@@ -26,9 +25,11 @@ const FilterItem = styled.div<TFilterItem>`
 
 const FilterName = styled.p``;
 
-type FilterProps = { store: TTodoStore };
+type FilterProps = {} & InjectedStoreProps;
 
 const Filter: FC<FilterProps> = ({ store }) => {
+  const { todoStore } = store;
+
   const filters = [
     { type: TODO_FILTER.SHOW_ALL, name: '모두보기' },
     { type: TODO_FILTER.SHOW_COMPLETED, name: '완료한 항목 보기' },
@@ -41,8 +42,8 @@ const Filter: FC<FilterProps> = ({ store }) => {
         {filters.map((filter) => (
           <FilterItem
             key={filter.type}
-            isActive={store.filter === filter.type}
-            onClick={() => store.setFilter(filter.type)}
+            isActive={todoStore.filter === filter.type}
+            onClick={() => todoStore.setFilter(filter.type)}
           >
             <FilterName>{filter.name}</FilterName>
           </FilterItem>
@@ -52,4 +53,4 @@ const Filter: FC<FilterProps> = ({ store }) => {
   );
 };
 
-export default observer(Filter);
+export default pluggedIn(Filter);
