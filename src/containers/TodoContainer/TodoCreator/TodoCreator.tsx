@@ -6,7 +6,9 @@ import styled from 'styled-components';
 import { InjectedStoreProps, pluggedIn } from '~/helpers/mobx';
 import { TTodo } from '~/models/Todo';
 
-const Container = styled.div``;
+const Container = styled.div`
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+`;
 
 const StyledForm = styled.form``;
 
@@ -16,19 +18,23 @@ const Row = styled.div`
 `;
 
 const Input = styled.input`
-  padding: 8px 12px;
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
   appearance: none;
+  color: ${({ theme }) => theme.colors.gray800};
+  font-size: 16px;
   outline: none;
 `;
 
 const Button = styled.button`
   padding: 8px 16px;
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  border: none;
   appearance: none;
-  background-color: ${({ theme }) => theme.colors.green400};
-  color: #fff;
-  font-size: 16px;
+  background-color: ${({ theme }) => theme.colors.gray200};
+  color: ${({ theme }) => theme.colors.gray800};
+  font-size: 14px;
+  font-weight: 500;
   outline: none;
 `;
 
@@ -53,7 +59,7 @@ const TodoCreator: FC<TodoCreatorProps> = ({ store }) => {
         <Row>
           <Input
             type="text"
-            placeholder="할일을 입력하세요"
+            placeholder="할일을 입력해주세요"
             {...form.register('task')}
           />
           <Button type="submit">추가</Button>

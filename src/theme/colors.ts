@@ -28,6 +28,7 @@ const grayscaleColors = {
 };
 
 const redColors = {
+  red300: '#e57373',
   red600: '#c0392b',
   red900: '#b71c1c',
 };

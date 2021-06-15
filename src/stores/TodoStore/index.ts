@@ -11,12 +11,16 @@ export enum TODO_FILTER {
 
 const todoFilters: { [key in TODO_FILTER]: (todo: TTodo) => boolean } = {
   show_all: () => true,
-  show_active: (todo) => !todo.done,
-  show_completed: (todo) => todo.done,
+  show_active: (todo) => !todo.completed,
+  show_completed: (todo) => todo.completed,
 };
 
 const TodoStore = T.model('TodoStore', {
-  todos: T.optional(T.map(Todo), {}),
+  todos: T.optional(T.map(Todo), {
+    theme: { id: 'theme', task: 'styled-components theming', completed: false },
+    mobx: { id: 'mobx', task: 'Next.js Bolierplate', completed: true },
+    mst: { id: 'mst', task: 'MST(Mobx-State-Tree) Practice', completed: true },
+  }),
   filter: T.optional(
     T.enumeration(Object.values(TODO_FILTER)),
     TODO_FILTER.SHOW_ALL,
@@ -44,17 +48,23 @@ const TodoStore = T.model('TodoStore', {
     },
     addTodo(newTodo: Pick<TTodo, 'task'>) {
       const id = uid.gen();
-      self.todos.set(id, { id, done: false, ...newTodo });
+      self.todos.set(id, { id, completed: false, ...newTodo });
     },
     removeTodo(id: string) {
       if (self.todos.has(id)) {
         self.todos.delete(id);
       }
     },
-    toggleDone(id: string) {
+    toggleCompleted(id: string) {
       const target = self.todos.get(id);
       if (target) {
-        self.todos.set(id, { ...target, done: !target.done });
+        self.todos.set(id, { ...target, completed: !target.completed });
+      }
+    },
+    changeTask(id: string, task: string) {
+      const target = self.todos.get(id);
+      if (target) {
+        self.todos.set(id, { ...target, task });
       }
     },
   }));

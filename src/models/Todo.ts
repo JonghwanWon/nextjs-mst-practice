@@ -1,9 +1,10 @@
-import {  SnapshotOut, types as T } from 'mobx-state-tree';
+import { Instance, SnapshotOut, types as T } from 'mobx-state-tree';
 
 export const Todo = T.model('Todo', {
-  id: T.string,
+  id: T.identifier,
   task: T.string,
-  done: T.boolean,
+  completed: T.boolean,
 });
 
-export type TTodo = SnapshotOut<typeof Todo>
+export type TodoInstance = Instance<typeof Todo>;
+export type TTodo = SnapshotOut<typeof Todo>;
