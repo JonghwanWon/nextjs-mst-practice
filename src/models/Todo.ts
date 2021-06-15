@@ -1,4 +1,4 @@
-import { Instance, types as T } from 'mobx-state-tree';
+import {  SnapshotOut, types as T } from 'mobx-state-tree';
 
 export const Todo = T.model('Todo', {
   id: T.string,
@@ -6,5 +6,4 @@ export const Todo = T.model('Todo', {
   done: T.boolean,
 });
 
-export type TTodo = Instance<typeof Todo>;
-export type AddTodoPayload = Pick<TTodo, 'task'>;
+export type TTodo = SnapshotOut<typeof Todo>

@@ -1,9 +1,8 @@
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import styled from 'styled-components';
 
 import { InjectedStoreProps, pluggedIn } from '~/helpers/mobx';
 import { TODO_FILTER } from '~/stores/TodoStore';
-import colors from '~/theme/colors';
 
 const Container = styled.div``;
 
@@ -16,10 +15,10 @@ type TFilterItem = {
 };
 const FilterItem = styled.div<TFilterItem>`
   padding: 12px 24px;
-  border: 1px solid ${colors.border};
-  background-color: ${({ isActive }) =>
-    isActive ? colors.primary : colors.gray50};
-  color: ${({ isActive }) => (isActive ? '#Fff' : colors.gray800)};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  background-color: ${({ theme, isActive }) =>
+    isActive ? theme.colors.primary : theme.colors.gray50};
+  color: ${({ theme, isActive }) => (isActive ? '#Fff' : theme.colors.gray800)};
   cursor: pointer;
 `;
 
@@ -36,6 +35,13 @@ const Filter: FC<FilterProps> = ({ store }) => {
     { type: TODO_FILTER.SHOW_ACTIVE, name: '진행중 항목 보기' },
   ];
 
+  const handleFilter = useCallback(
+    (type: TODO_FILTER) => () => {
+      todoStore.setFilter(type);
+    },
+    [],
+  );
+
   return (
     <Container>
       <Filters>
@@ -43,7 +49,7 @@ const Filter: FC<FilterProps> = ({ store }) => {
           <FilterItem
             key={filter.type}
             isActive={todoStore.filter === filter.type}
-            onClick={() => todoStore.setFilter(filter.type)}
+            onClick={handleFilter(filter.type)}
           >
             <FilterName>{filter.name}</FilterName>
           </FilterItem>

@@ -1,9 +1,10 @@
-import { FormEventHandler, useRef, useState } from 'react';
+import { useCallback } from 'react';
 import { FC } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
 import { InjectedStoreProps, pluggedIn } from '~/helpers/mobx';
-import colors from '~/theme/colors';
+import { TTodo } from '~/models/Todo';
 
 const Container = styled.div``;
 
@@ -16,16 +17,16 @@ const Row = styled.div`
 
 const Input = styled.input`
   padding: 8px 12px;
-  border: 1px solid ${colors.border};
+  border: 1px solid ${({ theme }) => theme.colors.border};
   appearance: none;
   outline: none;
 `;
 
 const Button = styled.button`
   padding: 8px 16px;
-  border: 1px solid ${colors.border};
+  border: 1px solid ${({ theme }) => theme.colors.border};
   appearance: none;
-  background-color: ${colors.green400};
+  background-color: ${({ theme }) => theme.colors.green400};
   color: #fff;
   font-size: 16px;
   outline: none;
@@ -35,26 +36,25 @@ type TodoCreatorProps = {} & InjectedStoreProps;
 
 const TodoCreator: FC<TodoCreatorProps> = ({ store }) => {
   const { todoStore } = store;
-  const [inputValue, setInputValue] = useState('');
-  const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
+  const form = useForm<TTodo>({
+    defaultValues: { task: '' },
+  });
 
-    todoStore.addTodo({ task: inputValue });
-    setInputValue('');
-  };
+  const onSubmit: SubmitHandler<TTodo> = useCallback((payload) => {
+    todoStore.addTodo(payload);
+
+    form.reset();
+  }, []);
 
   return (
     <Container>
-      <StyledForm onSubmit={handleSubmit}>
+      <StyledForm onSubmit={form.handleSubmit(onSubmit)}>
         <Row>
           <Input
             type="text"
-            onChange={(e) => setInputValue(e.target.value)}
-            value={inputValue}
-            ref={inputRef}
             placeholder="할일을 입력하세요"
+            {...form.register('task')}
           />
           <Button type="submit">추가</Button>
         </Row>

@@ -1,7 +1,7 @@
 import { Instance, types as T } from 'mobx-state-tree';
 
 import { uid } from '~/helpers/utils/uid';
-import { AddTodoPayload, TTodo, Todo } from '~/models/Todo';
+import { TTodo, Todo } from '~/models/Todo';
 
 export enum TODO_FILTER {
   SHOW_ALL = 'show_all',
@@ -42,10 +42,9 @@ const TodoStore = T.model('TodoStore', {
     setFilter(filter: TODO_FILTER) {
       self.filter = filter;
     },
-    addTodo(payload: AddTodoPayload) {
+    addTodo(newTodo: Pick<TTodo, 'task'>) {
       const id = uid.gen();
-
-      self.todos.set(id, { id, done: false, task: payload.task });
+      self.todos.set(id, { id, done: false, ...newTodo });
     },
     removeTodo(id: string) {
       if (self.todos.has(id)) {

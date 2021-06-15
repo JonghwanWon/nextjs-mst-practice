@@ -1,6 +1,5 @@
 import { normalize } from 'polished';
 import { createGlobalStyle } from 'styled-components';
-import colors from './colors';
 
 const GlobalStyle = createGlobalStyle`
   ${normalize()};
@@ -15,7 +14,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    color: ${colors.gray900};
+    color: ${({ theme }) => theme.colors.gray900};
     font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont,
       'Malgun Gothic', '맑은 고딕', helvetica, 'Apple SD Gothic Neo',
       sans-serif;

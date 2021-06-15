@@ -1,13 +1,19 @@
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import { MdCheckCircle } from 'react-icons/md';
 import styled from 'styled-components';
 
 import { InjectedStoreProps, pluggedIn } from '~/helpers/mobx';
-import colors from '~/theme/colors';
 
 const Container = styled.div`
   padding: 24px 0;
 `;
+
+const Counter = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Count = styled.p``;
 
 const TodoItems = styled.div``;
 
@@ -16,7 +22,7 @@ const TodoItem = styled.div`
   display: flex;
   align-items: center;
   padding: 12px 16px;
-  border: 1px solid ${colors.border};
+  border: 1px solid ${({ theme }) => theme.colors.border};
   margin-bottom: 16px;
   background-color: #fff;
 
@@ -40,7 +46,7 @@ const ClearButton = styled.div`
     left: 50%;
     width: 12px;
     height: 1px;
-    background-color: ${colors.gray700};
+    background-color: ${({ theme }) => theme.colors.gray700};
     content: '';
   }
 
@@ -60,8 +66,8 @@ type TDoneIcon = {
   isCompleted: boolean;
 };
 const DoneIcon = styled.div<TDoneIcon>`
-  color: ${({ isCompleted }) =>
-    isCompleted ? colors.green400 : colors.gray400};
+  color: ${({ theme, isCompleted }) =>
+    isCompleted ? theme.colors.green400 : theme.colors.gray400};
   cursor: pointer;
 `;
 
@@ -74,18 +80,36 @@ type TodoListProps = {} & InjectedStoreProps;
 const TodoList: FC<TodoListProps> = ({ store }) => {
   const { todoStore } = store;
 
+  const handleToggleDone = useCallback(
+    (id: string) => () => {
+      todoStore.toggleDone(id);
+    },
+    [],
+  );
+
+  const handleRemoveTodo = useCallback(
+    (id: string) => () => {
+      todoStore.removeTodo(id);
+    },
+    [],
+  );
+
   return (
     <Container>
+      <Counter>
+        <Count>activeCount: {todoStore.activeCount}</Count>
+        <Count>completedCount: {todoStore.completedCount}</Count>
+      </Counter>
       <TodoItems>
         {todoStore.filteredTodos.map((todo) => (
           <TodoItem key={todo.id}>
-            <Status onClick={() => todoStore.toggleDone(todo.id)}>
+            <Status onClick={handleToggleDone(todo.id)}>
               <DoneIcon isCompleted={todo.done}>
                 <MdCheckCircle size={24} />
               </DoneIcon>
             </Status>
             <Task>{todo.task}</Task>
-            <ClearButton onClick={() => todoStore.removeTodo(todo.id)} />
+            <ClearButton onClick={handleRemoveTodo(todo.id)} />
           </TodoItem>
         ))}
       </TodoItems>
