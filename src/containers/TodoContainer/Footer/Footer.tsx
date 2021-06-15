@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { InjectedStoreProps, pluggedIn } from '~/helpers/mobx';
 import { media } from '~/helpers/styles/media';
 
+import Counter from './Counter';
 import Filter from './Filter';
 
 const Container = styled.div`
@@ -22,29 +22,18 @@ const Indicators = styled.div`
   `};
 `;
 
-const ActiveTodoCount = styled.p`
-  color: ${({ theme }) => theme.colors.gray700};
-  font-size: 13px;
-
-  ${media.mobile`
-    margin: 8px 0 4px;
-  `};
-`;
-
 const Help = styled.p`
   color: ${({ theme }) => theme.colors.gray700};
   font-size: 13px;
 `;
 
-type FooterProps = {} & InjectedStoreProps;
+type FooterProps = {};
 
-const Footer: FC<FooterProps> = ({ store }) => {
-  const { todoStore } = store;
-
+const Footer: FC<FooterProps> = ({}) => {
   return (
     <Container>
       <Indicators>
-        <ActiveTodoCount>{`남은 할일: ${todoStore.activeCount}개`}</ActiveTodoCount>
+        <Counter />
         <Filter />
       </Indicators>
       <Help>할일을 더블클릭해 수정할 수 있어요.</Help>
@@ -52,4 +41,4 @@ const Footer: FC<FooterProps> = ({ store }) => {
   );
 };
 
-export default pluggedIn(Footer);
+export default Footer;

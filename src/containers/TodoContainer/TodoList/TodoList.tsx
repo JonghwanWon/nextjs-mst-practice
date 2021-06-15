@@ -1,17 +1,18 @@
+import { observer } from 'mobx-react';
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { InjectedStoreProps, pluggedIn } from '~/helpers/mobx';
+import { getStore } from '~/stores/init';
 
 import EmptyList from './EmptyList';
 import TodoItem from './TodoItem';
 
 const Container = styled.div``;
 
-type TodoListProps = {} & InjectedStoreProps;
+type TodoListProps = {};
 
-const TodoList: FC<TodoListProps> = ({ store }) => {
-  const { todoStore } = store;
+const TodoList: FC<TodoListProps> = ({}) => {
+  const todoStore = getStore((stores) => stores.todoStore);
   const { filteredTodos } = todoStore;
 
   return (
@@ -25,4 +26,4 @@ const TodoList: FC<TodoListProps> = ({ store }) => {
   );
 };
 
-export default pluggedIn(TodoList);
+export default observer(TodoList);

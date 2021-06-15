@@ -1,7 +1,8 @@
+import { observer } from 'mobx-react';
 import { FC, useCallback } from 'react';
 import styled, { css } from 'styled-components';
 
-import { InjectedStoreProps, pluggedIn } from '~/helpers/mobx';
+import { getStore } from '~/stores/init';
 import { TODO_FILTER } from '~/stores/TodoStore';
 
 import { FilterKind } from './spec';
@@ -33,10 +34,10 @@ const FilterName = styled.p``;
 
 type FilterItemProps = {
   filter: FilterKind;
-} & InjectedStoreProps;
+};
 
-const FilterItem: FC<FilterItemProps> = ({ store, filter }) => {
-  const { todoStore } = store;
+const FilterItem: FC<FilterItemProps> = ({ filter }) => {
+  const todoStore = getStore((stores) => stores.todoStore);
 
   const handleFilter = useCallback(
     (type: TODO_FILTER) => () => {
@@ -55,4 +56,4 @@ const FilterItem: FC<FilterItemProps> = ({ store, filter }) => {
   );
 };
 
-export default pluggedIn(FilterItem);
+export default observer(FilterItem);

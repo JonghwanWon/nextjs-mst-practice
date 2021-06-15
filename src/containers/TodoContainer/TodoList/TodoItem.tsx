@@ -1,9 +1,10 @@
+import { observer } from 'mobx-react';
 import { FC, useCallback, useRef, useState } from 'react';
 import { MdCheckCircle } from 'react-icons/md';
 import styled, { css } from 'styled-components';
 
-import { InjectedStoreProps, pluggedIn } from '~/helpers/mobx';
 import { TodoInstance } from '~/models/Todo';
+import { getStore } from '~/stores/init';
 
 import TaskEditor from './TaskEditor';
 
@@ -92,10 +93,10 @@ const Task = styled.p<TTask>(
 
 type TodoItemProps = {
   todo: TodoInstance;
-} & InjectedStoreProps;
+};
 
-const TodoItem: FC<TodoItemProps> = ({ store, todo }) => {
-  const { todoStore } = store;
+const TodoItem: FC<TodoItemProps> = ({ todo }) => {
+  const todoStore = getStore((stores) => stores.todoStore);
   const [isEdit, setIsEdit] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -155,4 +156,4 @@ const TodoItem: FC<TodoItemProps> = ({ store, todo }) => {
   );
 };
 
-export default pluggedIn(TodoItem);
+export default observer(TodoItem);

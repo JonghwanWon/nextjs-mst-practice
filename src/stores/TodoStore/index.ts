@@ -27,18 +27,18 @@ const TodoStore = T.model('TodoStore', {
   ),
 })
   .views((self) => {
+    const todosData = () => {
+      return Array.from(self.todos.values());
+    };
     return {
-      get todosData() {
-        return Array.from(self.todos.values());
-      },
       get activeCount() {
-        return this.todosData.filter(todoFilters.show_active).length;
+        return todosData().filter(todoFilters.show_active).length;
       },
       get completedCount() {
-        return this.todosData.filter(todoFilters.show_completed).length;
+        return todosData().filter(todoFilters.show_completed).length;
       },
       get filteredTodos() {
-        return this.todosData.filter(todoFilters[self.filter]);
+        return todosData().filter(todoFilters[self.filter]);
       },
     };
   })
@@ -46,9 +46,9 @@ const TodoStore = T.model('TodoStore', {
     setFilter(filter: TODO_FILTER) {
       self.filter = filter;
     },
-    addTodo(newTodo: Pick<TTodo, 'task'>) {
+    addTodo(task: string) {
       const id = uid.gen();
-      self.todos.set(id, { id, completed: false, ...newTodo });
+      self.todos.set(id, { id, completed: false, task });
     },
     removeTodo(id: string) {
       if (self.todos.has(id)) {

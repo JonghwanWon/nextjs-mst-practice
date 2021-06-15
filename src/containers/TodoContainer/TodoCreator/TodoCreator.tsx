@@ -1,10 +1,11 @@
+import { observer } from 'mobx-react';
 import { useCallback } from 'react';
 import { FC } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
-import { InjectedStoreProps, pluggedIn } from '~/helpers/mobx';
 import { TTodo } from '~/models/Todo';
+import { getStore } from '~/stores/init';
 
 const Container = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
@@ -38,18 +39,17 @@ const Button = styled.button`
   outline: none;
 `;
 
-type TodoCreatorProps = {} & InjectedStoreProps;
+type TodoCreatorProps = {};
 
-const TodoCreator: FC<TodoCreatorProps> = ({ store }) => {
-  const { todoStore } = store;
+const TodoCreator: FC<TodoCreatorProps> = ({}) => {
+  const todoStore = getStore((stores) => stores.todoStore);
 
   const form = useForm<TTodo>({
     defaultValues: { task: '' },
   });
 
   const onSubmit: SubmitHandler<TTodo> = useCallback((payload) => {
-    todoStore.addTodo(payload);
-
+    todoStore.addTodo(payload.task);
     form.reset();
   }, []);
 
@@ -60,7 +60,7 @@ const TodoCreator: FC<TodoCreatorProps> = ({ store }) => {
           <Input
             type="text"
             placeholder="할일을 입력해주세요"
-            {...form.register('task')}
+            {...form.register('task', { required: true })}
           />
           <Button type="submit">추가</Button>
         </Row>
@@ -69,4 +69,4 @@ const TodoCreator: FC<TodoCreatorProps> = ({ store }) => {
   );
 };
 
-export default pluggedIn(TodoCreator);
+export default observer(TodoCreator);
